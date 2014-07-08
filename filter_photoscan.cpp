@@ -1,7 +1,9 @@
+#include "filter_photoscan.h"
 #include <QtGui>
 #include <stdlib.h>
+#include <QFileDialog>
 //#include "meshfilter.h"
-#include "filter_photoscan.h"
+
 
 using namespace photoscan;
 
@@ -74,10 +76,12 @@ bool        FilterPhotoScan::applyFilter( QAction *act,
 
         for(int i = 0 ; i < 3 ; i++){
             for(int j =0 ; j < 3 ; j++){
-                transform_mat[i][j] = camera.rotation[i][j];
+                transform_mat[i][j] = camera.rotation[j][i];
             }
             transform_mat[i][3] = camera.translation[i];
             transform_mat[3][i] = 0;
+
+            rot[i][3] = 0;
             rot[3][i] = 0;
         }
         transform_mat[3][3] = 1;
@@ -92,7 +96,7 @@ bool        FilterPhotoScan::applyFilter( QAction *act,
             trans[i] = transform_mat[i][3];
         }
 
-        rot = vcg::Inverse(rot);
+//        rot = vcg::Inverse(rot);
         for(int i = 0 ; i < 3 ; i++){
             rot[2][i] = -rot[2][i];
         }
@@ -100,15 +104,15 @@ bool        FilterPhotoScan::applyFilter( QAction *act,
         rm->shot.Extrinsics.SetRot(rot);
         rm->shot.Extrinsics.SetTra(trans);
 
-        float ratio = 0.05 / trans.Norm();
+//        float ratio = 0.05 / trans.Norm();
 
-        rm->shot.Intrinsics.ViewportPx = vcg::Point2i(1308 * ratio, 1950 * ratio );//camera.sensor.width, camera.sensor.height);
+        rm->shot.Intrinsics.ViewportPx = vcg::Point2i(1308 , 1950 );//camera.sensor.width, camera.sensor.height);
         rm->shot.Intrinsics.CenterPx   = vcg::Point2f((float)1308 / 2, (float)1950 / 2 ); //camera.sensor.cx, camera.sensor.cy);
-        rm->shot.Intrinsics.PixelSizeMm[0]= 2 * camera.sensor.pix_width;
-        rm->shot.Intrinsics.PixelSizeMm[1]= 2 * camera.sensor.pix_height;
+        rm->shot.Intrinsics.PixelSizeMm[0]= camera.sensor.pix_width;
+        rm->shot.Intrinsics.PixelSizeMm[1]= camera.sensor.pix_height;
         rm->shot.Intrinsics.FocalMm = 50 ;//camera.sensor.fx * camera.sensor.pix_width;
-        rm->shot.Intrinsics.k[0] = camera.sensor.k1;
-        rm->shot.Intrinsics.k[1] = camera.sensor.k2;
+//        rm->shot.Intrinsics.k[0] = camera.sensor.k1;
+//        rm->shot.Intrinsics.k[1] = camera.sensor.k2;
 
 
 
