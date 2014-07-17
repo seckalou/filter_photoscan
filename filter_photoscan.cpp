@@ -99,22 +99,23 @@ bool        FilterPhotoScan::applyFilter( QAction *act,
 //        rot = vcg::Inverse(rot);
         for(int i = 0 ; i < 3 ; i++){
             rot[2][i] = -rot[2][i];
+            rot[1][i] = -rot[1][i];
+//            rot[0][i] = -rot[0][i];
         }
 
         rm->shot.Extrinsics.SetRot(rot);
         rm->shot.Extrinsics.SetTra(trans);
 
-//        float ratio = 0.05 / trans.Norm();
-
-        rm->shot.Intrinsics.ViewportPx = vcg::Point2i(1308 , 1950 );//camera.sensor.width, camera.sensor.height);
-        rm->shot.Intrinsics.CenterPx   = vcg::Point2f((float)1308 / 2, (float)1950 / 2 ); //camera.sensor.cx, camera.sensor.cy);
-        rm->shot.Intrinsics.PixelSizeMm[0]= camera.sensor.pix_width;
-        rm->shot.Intrinsics.PixelSizeMm[1]= camera.sensor.pix_height;
-        rm->shot.Intrinsics.FocalMm = 50 ;//camera.sensor.fx * camera.sensor.pix_width;
+        rm->shot.Intrinsics.ViewportPx = vcg::Point2i(camera.sensor.width, camera.sensor.height);
+        rm->shot.Intrinsics.CenterPx   = vcg::Point2f(camera.sensor.width / 2 , camera.sensor.height / 2 );
+//        rm->shot.Intrinsics.CenterPx   = vcg::Point2f(camera.sensor.cx, camera.sensor.cy);
+        rm->shot.Intrinsics.PixelSizeMm[0]= 0.012 ; //camera.sensor.pix_width;
+        rm->shot.Intrinsics.PixelSizeMm[1]= 0.012 ; //camera.sensor.pix_height;
+        rm->shot.Intrinsics.FocalMm = camera.sensor.fx * 0.012 ; //camera.sensor.pix_width;
+//        rm->shot.Intrinsics.DistorCenterPx = vcg::Point2f(camera.sensor.cx , camera.sensor.cy );
 //        rm->shot.Intrinsics.k[0] = camera.sensor.k1;
 //        rm->shot.Intrinsics.k[1] = camera.sensor.k2;
-
-
+//        rm->shot.Intrinsics.k[3] = camera.sensor.k3;
 
 
 
